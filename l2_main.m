@@ -102,18 +102,18 @@ end
 
 set(handles.T2s,'String',T2s)
 
-function T2_Callback(hObject, eventdata, handles)
-% hObject    handle to T2 (see GCBO)
+function T22_Callback(hObject, eventdata, handles)
+% hObject    handle to T22 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of T2 as text
-%        str2double(get(hObject,'String')) returns contents of T2 as a double
+% Hints: get(hObject,'String') returns contents of T22 as text
+%        str2double(get(hObject,'String')) returns contents of T22 as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function T2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to T2 (see GCBO)
+function T22_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to T22 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -157,22 +157,40 @@ T1=upper(get(handles.T1,'String'));
 T2=upper(get(handles.T2,'String'));
 T1s=upper(get(handles.T1s,'String'));
 T2s=upper(get(handles.T2s,'String'));
-% (unique(strcat(T1,T2,T1s)))
+% (unique(strcat(T1,T22,T1s)))
 mb_alf=(unique(strcat(T1,T2,T1s)));
 
 alf='ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÜÛÚİŞß';
+xx=1;yy=1;
+X=[];
+Y=[];
+while numel(X)<2 
+    if ~isempty(find(T1(xx)==alf)) && ~isempty(find(T1s(xx)==alf)) 
+    X=[X find(T1(xx)==alf)-1 find(T1s(xx)==alf)-1]
+    end
+
+    xx=xx+1;
+end
+
+while numel(Y)<2 
+    if ~isempty(find(T1(yy)==alf)) && ~isempty(find(T1s(yy)==alf))  && yy~=xx-1
+    Y=[Y find(T1(yy)==alf)-1 find(T1s(yy)==alf)-1]
+    end
+
+    yy=yy+1;
+end
 
 alf=strcat(alf,mb_alf(~ismember(mb_alf,alf)));
 
 m=numel(alf);
 % m=49;
 A=[];
-while isempty(A)==1
+while isempty(A)==1 
 for i=1:numel(a)
     an=str2double(a(i));
     for j=1:numel(b)
         bn=str2double(b(j));
-res=try_ab(an,bn,m);
+res=try_ab(an,bn,m,X,Y);
         if res==0 
           A= an
            B=bn
@@ -188,7 +206,7 @@ end
 alf=strcat(alf,'?');
 end
 
-% return
+B=B+2
 
 
 [G C D]=gcd(A,m);
@@ -201,15 +219,15 @@ end
 for i=1:numel(T2s)
     a1=find(T2s(i)==alf)-1;
     if isempty(a1)==0
-        a2=fix(mod(a_*(a1-B),m));
+        a2=(mod(a_*(a1-B),m));
         TT(i)=alf(a2+1);
     end
 end
-TT
+set(handles.T22,'String',strcat(TT(1),lower(TT(2:end))));
 
 
-function res=try_ab(a,b,m)
-res=mod(a*12+b,m)-18-mod(a*32+b,m)+20;
+function res=try_ab(a,b,m,x,y)
+res=mod(a*x(1)+b,m)-x(2)-mod(a*y(1)+b,m)+y(2);
 
 
 % for i=1:numel(a)
@@ -233,3 +251,36 @@ res=mod(a*12+b,m)-18-mod(a*32+b,m)+20;
 
 
 
+function edit5_Callback(hObject, eventdata, handles)
+% hObject    handle to T22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of T22 as text
+%        str2double(get(hObject,'String')) returns contents of T22 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to T22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function T2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to T2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
