@@ -183,34 +183,42 @@ while numel(Y)<2
     yy=yy+1;
 end
 
+n2stop=0;
 
-
-m=numel(alf);
-m=49;
+m=numel(alf)
+% m=49;
 A=[];
-while isempty(A)==1 
+B=[];
+while n2stop~=1
+   
+    
+    
 for i=1:numel(a)
     an=str2double(a(i));
     for j=1:numel(b)
         bn=str2double(b(j));
 res=try_ab(an,bn,m,X,Y);
-        if res==0 
-          A= an
-           B=bn
-           m=m-1;
-           break
+        if res(1)==0 &&  res(2)==0
+          A=an;
+           B=bn;
 
         end
 
     end
 
 end
-            m=m+1;
-alf=strcat(alf,char(174));
-end
 m
+A
+B
 
-B=B+5
+if isempty(A)==1
+               m=m+1;
+alf=strcat(alf,char(174)); 
+else
+%     m
+%     alf
+% return
+% B=B+5
 
 
 [G C D]=gcd(A,m);
@@ -220,28 +228,38 @@ else
     a_=C;
 end
 
+ 
+for i=1:numel(T1s)
+    a1=find(T1(i)==alf)-1
 
-for i=1:numel(T2s)
-    a1=find(T2s(i)==alf);
-    if isempty(a1)==0 
-        if numel(a1)>1 || ~strcmp(T2s(i),char(174))
+%     if isempty(a1)==0 
+%         if numel(a1)>1 || ~strcmp(T1s(i),char(174))
 
-           a1=a1(1);
-        end
+%            a1=a1(1);
+%         end
 
-        a2=(mod(a_*(a1-1-B),m));
-
-        if a2>=numel(alf)
-           a2=0; 
-        end
-        TT(i)=alf(a2+1);
-    end
+%         a2=(mod(a_*(a1-B),m))
+ a2=(mod(A*a1+B,m))
+%         if a2>=numel(alf)
+%            a2=0; 
+%         end
+% % % % %         TT(i)=alf(a2+1);
+if strcmp(alf(a2+1),T1s(i))~=1
+%     disp('afsasf')
+%     return
+  m=  m+1
+break;
 end
-set(handles.T22,'String',strcat(TT(1),lower(TT(2:end))));
+%     end
 
+end
+%     set(handles.T22,'String',strcat(TT(1),lower(TT(2:end))));
+end
+end
 
 function res=try_ab(a,b,m,x,y)
-res=mod(a*x(1)+b,m)-x(2)-mod(a*y(1)+b,m)+y(2);
+res(1)=mod(a*x(1)+b,m)-x(2);
+res(2)=mod(a*y(1)+b,m)-y(2);
 
 
 % for i=1:numel(a)

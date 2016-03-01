@@ -161,54 +161,64 @@ T2s=upper(get(handles.T2s,'String'));
 mb_alf=(unique(strcat(T1,T2,T1s)));
 
 alf='ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÜÛÚİŞß';
-xx=1;
+
+alf=(strcat(alf,mb_alf(~ismember(mb_alf,alf))));
+
+xx=1;yy=1;
 X=[];
 Y=[];
 while numel(X)<2 
     if ~isempty(find(T1(xx)==alf)) && ~isempty(find(T1s(xx)==alf)) 
-    X=[X find(T1(xx)==alf)-1 find(T1s(xx)==alf)-1]
+    X=[X find(T1(xx)==alf)-1 find(T1s(xx)==alf)-1];
     end
 
     xx=xx+1;
 end
 
-while numel(X)<2 
-    if ~isempty(find(T1(xx)==alf)) && ~isempty(find(T1s(xx)==alf)) 
-    X=[X find(T1(xx)==alf)-1 find(T1s(xx)==alf)-1]
+while numel(Y)<2 
+    if ~isempty(find(T1(yy)==alf)) && ~isempty(find(T1s(yy)==alf))  && yy~=xx-1
+    Y=[Y find(T1(yy)==alf)-1 find(T1s(yy)==alf)-1];
     end
 
-    xx=xx+1;
+    yy=yy+1;
 end
 
+n2stop=0;
 
-return
-alf=strcat(alf,mb_alf(~ismember(mb_alf,alf)));
-
-m=numel(alf);
+m=numel(alf)
 % m=49;
 A=[];
-while isempty(A)==1 
+B=[];
+while n2stop~=1
+   
+    
+    
 for i=1:numel(a)
     an=str2double(a(i));
     for j=1:numel(b)
         bn=str2double(b(j));
-res=try_ab(an,bn,m);
+res=try_ab(an,bn,m,X,Y);
         if res==0 
-          A= an
-           B=bn
-           m=m-1
-           break
+          A= an;
+           B(j)=bn;
+%            m=m-1;
+%            break
 
         end
 
     end
 
 end
-            m=m+1;
-alf=strcat(alf,'?');
-end
 
-B=B
+
+A
+B
+if isempty(A)==1
+               m=m+1;
+alf=strcat(alf,char(174)); 
+else
+
+B=B+5
 
 
 [G C D]=gcd(A,m);
@@ -218,18 +228,29 @@ else
     a_=C;
 end
 
+return
 for i=1:numel(T2s)
-    a1=find(T2s(i)==alf)-1;
-    if isempty(a1)==0
-        a2=(mod(a_*(a1-B),m));
+    a1=find(T2s(i)==alf);
+    if isempty(a1)==0 
+        if numel(a1)>1 || ~strcmp(T2s(i),char(174))
+
+           a1=a1(1);
+        end
+
+        a2=(mod(a_*(a1-1-B),m));
+
+        if a2>=numel(alf)
+           a2=0; 
+        end
         TT(i)=alf(a2+1);
     end
+    set(handles.T22,'String',strcat(TT(1),lower(TT(2:end))));
 end
-set(handles.T22,'String',strcat(TT(1),lower(TT(2:end))));
+end
+end
 
-
-function res=try_ab(a,b,m,x1,x2,y1,y2)
-res=mod(a*12+b,m)-18-mod(a*32+b,m)+20;
+function res=try_ab(a,b,m,x,y)
+res=mod(a*x(1)+b,m)-x(2)-mod(a*y(1)+b,m)+y(2);
 
 
 % for i=1:numel(a)
