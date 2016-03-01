@@ -161,6 +161,9 @@ T2s=upper(get(handles.T2s,'String'));
 mb_alf=(unique(strcat(T1,T2,T1s)));
 
 alf='ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÜÛÚİŞß';
+
+alf=(strcat(alf,mb_alf(~ismember(mb_alf,alf))));
+
 xx=1;yy=1;
 X=[];
 Y=[];
@@ -180,10 +183,10 @@ while numel(Y)<2
     yy=yy+1;
 end
 
-alf=strcat(alf,mb_alf(~ismember(mb_alf,alf)));
+
 
 m=numel(alf);
-% m=49;
+m=49;
 A=[];
 while isempty(A)==1 
 for i=1:numel(a)
@@ -194,7 +197,7 @@ res=try_ab(an,bn,m,X,Y);
         if res==0 
           A= an
            B=bn
-           m=m-1
+           m=m-1;
            break
 
         end
@@ -203,10 +206,11 @@ res=try_ab(an,bn,m,X,Y);
 
 end
             m=m+1;
-alf=strcat(alf,'?');
+alf=strcat(alf,char(174));
 end
+m
 
-B=B+2
+B=B+5
 
 
 [G C D]=gcd(A,m);
@@ -216,10 +220,20 @@ else
     a_=C;
 end
 
+
 for i=1:numel(T2s)
-    a1=find(T2s(i)==alf)-1;
-    if isempty(a1)==0
-        a2=(mod(a_*(a1-B),m));
+    a1=find(T2s(i)==alf);
+    if isempty(a1)==0 
+        if numel(a1)>1 || ~strcmp(T2s(i),char(174))
+
+           a1=a1(1);
+        end
+
+        a2=(mod(a_*(a1-1-B),m));
+
+        if a2>=numel(alf)
+           a2=0; 
+        end
         TT(i)=alf(a2+1);
     end
 end
