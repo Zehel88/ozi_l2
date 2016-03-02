@@ -103,22 +103,9 @@ end
 set(handles.T2s,'String',T2s)
 
 function T22_Callback(hObject, eventdata, handles)
-% hObject    handle to T22 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of T22 as text
-%        str2double(get(hObject,'String')) returns contents of T22 as a double
-
-
-% --- Executes during object creation, after setting all properties.
 function T22_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to T22 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -126,22 +113,9 @@ end
 
 
 function T2s_Callback(hObject, eventdata, handles)
-% hObject    handle to T2s (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of T2s as text
-%        str2double(get(hObject,'String')) returns contents of T2s as a double
-
-
-% --- Executes during object creation, after setting all properties.
 function T2s_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to T2s (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -151,8 +125,7 @@ end
 function pushbutton2_Callback(hObject, eventdata, handles)
 %% Расшифровать
 clc
-load('a.mat')
-load('b.mat')
+
 T1=upper(get(handles.T1,'String'));
 T2=upper(get(handles.T2,'String'));
 T1s=upper(get(handles.T1s,'String'));
@@ -189,10 +162,11 @@ m=numel(alf)
 % m=49;
 A=[];
 B=[];
+b=3:15;
+a=VzaimOD(m)
+return
 while n2stop~=1
    
-    
-    
 for i=1:numel(a)
     an=str2double(a(i));
     for j=1:numel(b)
@@ -201,25 +175,13 @@ res=try_ab(an,bn,m,X,Y);
         if res(1)==0 &&  res(2)==0
           A=an;
            B=bn;
-
         end
-
     end
-
 end
-m
-A
-B
-
 if isempty(A)==1
                m=m+1;
 alf=strcat(alf,char(174)); 
 else
-%     m
-%     alf
-% return
-% B=B+5
-
 
 [G C D]=gcd(A,m);
 if D>0
@@ -228,91 +190,64 @@ else
     a_=C;
 end
 
- 
 for i=1:numel(T1s)
-    a1=find(T1(i)==alf)-1
-
-%     if isempty(a1)==0 
-%         if numel(a1)>1 || ~strcmp(T1s(i),char(174))
-
-%            a1=a1(1);
-%         end
-
-%         a2=(mod(a_*(a1-B),m))
- a2=(mod(A*a1+B,m))
-%         if a2>=numel(alf)
-%            a2=0; 
-%         end
-% % % % %         TT(i)=alf(a2+1);
-if strcmp(alf(a2+1),T1s(i))~=1
-%     disp('afsasf')
-%     return
-  m=  m+1
+    a1=find(T1(i)==alf)-1;
+ a2=(mod(A*a1+B,m));
+if strcmp(T1s(i),alf(a2+1))~=1
+  m=  m+1;
 break;
 end
-%     end
 
 end
-%     set(handles.T22,'String',strcat(TT(1),lower(TT(2:end))));
+n2stop=1;
 end
+
 end
+
+
 
 function res=try_ab(a,b,m,x,y)
 res(1)=mod(a*x(1)+b,m)-x(2);
 res(2)=mod(a*y(1)+b,m)-y(2);
 
+function a_s=VzaimOD(m)
+var_a=1:7;
+ch=[2 3 5 7];
+res=mod(m,ch);
+n2d=[];
+if res(1)==0
+    n2d=[n2d 2 4 6];
+end
+if res(2)==0
+    n2d=[n2d 3 6];
+end
+if res(3)==0
+    n2d=[n2d 5];
+end
 
-% for i=1:numel(a)
-%     an=cell2mat(a(i));
-%     for j=1:numel(b)
-%         bn=cell2mat(b(i));
-%         buf='';
-%         for k=1:numel(T1)
-%             T1(k)
-%            if isempty(find(buf==T1(k)))==1   
-%         buf(k)=T1(k)
-%            end
-%            T1(mod(an*k+bn,mb_alf))
-%         if isempty(find(buf==T1(mod(an*k+bn,mb_alf))))==1
-%         buf(mod(an*k+bn,mb_alf))=T1s(k)
-%         end
-% 
-%         end
-%     end
-% end
-
+if res(4)==0
+    n2d=[n2d 7];
+end
+n2d=unique(n2d);
+var_a(n2d)='';
+for i=1:numel(var_a)
+   a_s(i)=var_a(i); 
+end
 
 
 function edit5_Callback(hObject, eventdata, handles)
-% hObject    handle to T22 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of T22 as text
-%        str2double(get(hObject,'String')) returns contents of T22 as a double
 
 
-% --- Executes during object creation, after setting all properties.
+
 function edit5_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to T22 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
 
-% --- Executes during object creation, after setting all properties.
 function T2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to T2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
